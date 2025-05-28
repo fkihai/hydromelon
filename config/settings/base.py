@@ -14,6 +14,7 @@ env = environ.Env()
 env.read_env(str(BASE_DIR / '.env'))
 
 SECRET_KEY = env("SECRET_KEY")
+API_KEY = env("API_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = []
@@ -26,6 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
+    'apps.prediction',
+    'apps.data',
+    'apps.accounts'
 ]
 
 MIDDLEWARE = [
@@ -94,6 +98,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 # REST_FRAMEWORK = {
 #     'DEFAULT_PERMISSION_CLASSES' : (
 #         'rest_framework.permissions.IsAuthenticated',
@@ -107,5 +113,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 #     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 # }
-
-# AUTH_USER_MODEL = 'accounts.CustomUser'
