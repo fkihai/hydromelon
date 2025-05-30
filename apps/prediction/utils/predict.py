@@ -1,10 +1,15 @@
 import os
+import uuid
 import torch
 import torchvision
 import matplotlib
 matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
+
 from PIL import Image, ImageDraw
+from io import BytesIO
+from django.core.files.base import ContentFile
+
 from torchvision.transforms import functional as F
 from torchvision.models.detection import FasterRCNN_ResNet50_FPN_Weights
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
@@ -32,7 +37,7 @@ class MelonRipenessDetector:
         return model
     
     def load_model(self,filename):
-        model_path = os.path.join('apps', 'prediction', 'model', filename)
+        model_path = os.path.join('apps', 'prediction', 'ml', filename)
         model = self._getModel()
         model.load_state_dict(torch.load(model_path,map_location=self.device))
         model.to(self.device)
@@ -59,9 +64,7 @@ class MelonRipenessDetector:
         boxes = prediction[0]['boxes'].cpu().numpy()
         labels = prediction[0]['labels'].cpu().numpy()
         scores = prediction[0]['scores'].cpu().numpy()
-        
-        image_path = os.path.join('apps','prediction','image','predicted.jpg')
-        
+                
         image_draw = image.copy()
         draw = ImageDraw.Draw(image_draw)
 
@@ -71,14 +74,24 @@ class MelonRipenessDetector:
                 class_name = self.get_classname(label)
                 data = {
                     'predict' : class_name,
-                    'score' : round(float(score),2)
+                    'score' : round(float(score),2),
                 }
                 draw.rectangle([x_min, y_min, x_max, y_max], outline='red', width=2)
                 draw.text((x_min, y_min), f"{class_name} ({score:.2f})", fill='red')
-
-        image_draw.save(image_path)
         
-        return data
+        
+        buffer = BytesIO()
+        image_draw.save(buffer, format='JPEG')
+        buffer.seek(0)
+        
+        random_name = f"{uuid.uuid4()}.jpg"
+        django_file = ContentFile(buffer.read(), name=random_name)
+                   
+        return {
+            'predictions' : data['predict'],
+            'score' : data['score'],
+            'image' : django_file
+        }
         
 
 
