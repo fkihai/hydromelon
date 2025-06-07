@@ -17,7 +17,9 @@ SECRET_KEY = env("SECRET_KEY")
 API_KEY = env("API_KEY")
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '192.168.101.9',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -103,17 +105,16 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES' : (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES' :(
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES' : (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES' :(
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     )
-# }
-
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-# }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}

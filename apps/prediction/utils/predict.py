@@ -61,6 +61,17 @@ class MelonRipenessDetector:
     
     def draw_box(self, image, prediction, fig_size=(10,10)):
         data = None # for pyload message response
+        
+        # validate prediction
+        if not prediction or not prediction[0].get('boxes') is not None:
+            return {
+                'predictions': None,
+                'score': None,
+                'image': None,
+                'errors': 'Prediction failed or returned no results.'
+            }
+
+        
         boxes = prediction[0]['boxes'].cpu().numpy()
         labels = prediction[0]['labels'].cpu().numpy()
         scores = prediction[0]['scores'].cpu().numpy()
@@ -90,7 +101,8 @@ class MelonRipenessDetector:
         return {
             'predictions' : data['predict'],
             'score' : data['score'],
-            'image' : django_file
+            'image' : django_file,
+            'errors': None
         }
         
 
