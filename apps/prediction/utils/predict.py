@@ -28,21 +28,22 @@ class MelonRipenessDetector:
         self.threshold = threshold
         self.device = torch.device('cpu')
         self.model = None
-        
+            
     def _getModel(self):
-        weights = FasterRCNN_ResNet50_FPN_Weights.DEFAULT
-        model = torchvision.models.detection.fasterrcnn_resnet50_fpn(weights=weights)
+        model = torchvision.models.detection.fasterrcnn_resnet50_fpn(weights=None)
         in_features = model.roi_heads.box_predictor.cls_score.in_features
         model.roi_heads.box_predictor = FastRCNNPredictor(in_features, self.num_classes)
         return model
-    
-    def load_model(self,filename):
+
+    def load_model(self, filename):
         model_path = os.path.join('apps', 'prediction', 'ml', filename)
         model = self._getModel()
-        model.load_state_dict(torch.load(model_path,map_location=self.device))
+        state_dict = torch.load(model_path, map_location=self.device)
+        model.load_state_dict(state_dict)
         model.to(self.device)
         model.eval()
         self.model = model
+
                 
     def load_image(self, image_path):
         image = Image.open(image_path).convert("RGB")
