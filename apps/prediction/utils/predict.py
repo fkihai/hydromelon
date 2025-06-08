@@ -2,9 +2,6 @@ import os
 import uuid
 import torch
 import torchvision
-import matplotlib
-matplotlib.use('Agg') 
-import matplotlib.pyplot as plt
 
 from PIL import Image, ImageDraw
 from io import BytesIO

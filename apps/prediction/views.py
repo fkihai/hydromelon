@@ -10,6 +10,10 @@ from .models import DataPredict
 from .serializers import PredictImageSerializer, UploadImageSerializer
 from .utils.predict import MelonRipenessDetector
 
+
+rippenesDetector =MelonRipenessDetector()
+rippenesDetector.load_model('fasterrcnn_resnet50_epoch_9.pth')
+
 class PredictionView(APIView):
     permission_classes = [HasAPIKey, IsAuthenticated]
     
@@ -21,8 +25,6 @@ class PredictionView(APIView):
             if serializer.is_valid():
                 image_file = serializer.validated_data["image"]
         
-            rippenesDetector =MelonRipenessDetector()
-            rippenesDetector.load_model('fasterrcnn_resnet50_epoch_9.pth')
             image_tensor, image = rippenesDetector.load_image(image_file)
             predictions = rippenesDetector.predict(image_tensor)
             data = rippenesDetector.draw_box(image,predictions)

@@ -15,11 +15,6 @@ env.read_env(str(BASE_DIR / '.env'))
 
 SECRET_KEY = env("SECRET_KEY")
 API_KEY = env("API_KEY")
-DEBUG = env('DEBUG')
-
-ALLOWED_HOSTS = [
-    '192.168.101.9', '127.0.0.1',
-]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
