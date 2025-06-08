@@ -24,7 +24,5 @@ setuptools==70.2.0
 six==1.17.0
 sqlparse==0.5.3
 sympy==1.13.3
-torch==2.7.0+cpu
-torchvision==0.22.0+cpu
 typing_extensions==4.13.2
 tzdata==2025.2
