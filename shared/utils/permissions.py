@@ -1,6 +1,6 @@
 
 from rest_framework.permissions import BasePermission
-from config.settings import base
+from web.config import base
 
 class HasAPIKey(BasePermission):
     

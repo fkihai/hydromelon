@@ -27,7 +27,8 @@ class MelonRipenessDetector:
         self.model = None
             
     def _getModel(self):
-        model = torchvision.models.detection.fasterrcnn_resnet50_fpn(weights=None)
+        weights = FasterRCNN_ResNet50_FPN_Weights.DEFAULT
+        model = torchvision.models.detection.fasterrcnn_resnet50_fpn(weights=weights)
         in_features = model.roi_heads.box_predictor.cls_score.in_features
         model.roi_heads.box_predictor = FastRCNNPredictor(in_features, self.num_classes)
         return model

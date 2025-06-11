@@ -8,9 +8,16 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
 import os
-
+from dotenv import load_dotenv
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
+load_dotenv()
+
+env = os.getenv('DJANGO_ENV', 'dev')
+if env == "prod":
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'web.config.prod'
+else:
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'web.config.dev'
 
 application = get_wsgi_application()
+

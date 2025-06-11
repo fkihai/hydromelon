@@ -11,7 +11,7 @@ from .serializers import PredictImageSerializer, UploadImageSerializer
 from .utils.predict import MelonRipenessDetector
 
 
-rippenesDetector =MelonRipenessDetector()
+rippenesDetector =MelonRipenessDetector()   
 rippenesDetector.load_model('fasterrcnn_resnet50_epoch_9.pth')
 
 class PredictionView(APIView):
@@ -47,6 +47,12 @@ class PredictionView(APIView):
                 message=str(e),
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
+    
+    def get(self,request):
+        predictions = DataPredict.objects.all().order_by("-predict_at")
+        serializer = PredictImageSerializer(predictions, many=True)
+        return ResponseHelper.success(
+            data=serializer.data
+        )
 
 
